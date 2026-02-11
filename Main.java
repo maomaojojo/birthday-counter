@@ -1,4 +1,5 @@
 import java.time.LocalDate;
+import java.time.Period;
 import java.time.temporal.ChronoUnit;
 import java.util.Scanner;
 
@@ -8,18 +9,28 @@ public class Main {
         Scanner scanner = new Scanner(System.in);
 
         System.out.print("生年月日を入力してください（YYYY-MM-DD）: ");
-        String input = scanner.nextLine();
+        String birthInput = scanner.nextLine();
 
-        // 文字列を日付に変換
-        LocalDate birthDate = LocalDate.parse(input);
-
-        // 今日の日付
+        LocalDate birthDate = LocalDate.parse(birthInput);
         LocalDate today = LocalDate.now();
 
-        // 生まれてからの日数を計算
-        long days = ChronoUnit.DAYS.between(birthDate, today);
+        // 生まれてから今日までの日数
+        long totalDays = ChronoUnit.DAYS.between(birthDate, today);
 
-        System.out.println("あなたは生まれてから " + days + " 日目です。");
+        // 年齢計算
+        Period period = Period.between(birthDate, today);
+        int years = period.getYears();
+
+        // 今年の誕生日
+        LocalDate thisYearBirthday = birthDate.withYear(today.getYear());
+        if (today.isBefore(thisYearBirthday)) {
+            thisYearBirthday = thisYearBirthday.minusYears(1);
+        }
+
+        long daysSinceBirthday = ChronoUnit.DAYS.between(thisYearBirthday, today);
+
+        System.out.println("あなたは生まれてから " + totalDays + " 日目です。");
+        System.out.println(years + "歳 " + daysSinceBirthday + "日目です。");
 
         scanner.close();
     }
